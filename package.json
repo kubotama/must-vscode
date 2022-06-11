@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:must-vscode.helloWorld"
+        "onCommand:must-vscode.urlToMarkdownLink"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "must-vscode.helloWorld",
-				"title": "Hello World"
+				"command": "must-vscode.urlToMarkdownLink",
+				"title": "must: url to Markdown Link"
 			}
 		]
 	},
