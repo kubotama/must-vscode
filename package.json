@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:must-vscode.urlToMarkdownLink"
+    "onCommand:must-vscode.urlToLink"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "must-vscode.urlToMarkdownLink",
-        "title": "must: url to Markdown Link"
+        "command": "must-vscode.urlToLink",
+        "title": "must: url to Link"
       }
     ]
   },
