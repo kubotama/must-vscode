@@ -24,7 +24,7 @@ export const activate = (context: vscode.ExtensionContext) => {
       const document = editor.document;
       const text = document.getText(selection);
       if (text) {
-        const link = urlToMarkdownLink(text).then((link) => {
+        urlToMarkdownLink(text).then((link) => {
           editor.edit(editBuilder => {
             editBuilder.replace(selection, link);
           });
