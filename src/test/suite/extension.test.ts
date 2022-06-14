@@ -4,7 +4,7 @@ import * as assert from "assert";
 // as well as import your extension to test it
 import * as vscode from "vscode";
 
-import { urlToLink } from "../../extension";
+import { urlToLink } from "../../link";
 
 suite("Markdown Link", () => {
   vscode.window.showInformationMessage("Start all tests.");
