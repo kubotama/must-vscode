@@ -3,12 +3,8 @@ import axios from "axios";
 import { JSDOM } from "jsdom";
 
 export const urlToLink = async (url: string) => {
-  try {
-    const title = await getTitle(url);
-    return `[${title}](${url})`;
-  } catch (error) {
-    return url;
-  }
+  const title = await getTitle(url);
+  return `[${title}](${url})`;
 };
 
 const getTitle = async (url: string) => {
