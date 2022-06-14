@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { JSDOM } from "jsdom";
 
-export const urlToLink = async (url: string): Promise<string> => {
+export const urlToLink = async (url: string) => {
   try {
     const response = await axios.get(url);
     const dom = new JSDOM(response.data);
@@ -13,7 +13,7 @@ export const urlToLink = async (url: string): Promise<string> => {
   }
 };
 
-const getTitle = async (url: string): Promise<string> => {
+const getTitle = async (url: string) => {
   try {
     const response = await axios.get(url);
     const dom = new JSDOM(response.data);
