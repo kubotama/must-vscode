@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { text } from "stream/consumers";
 import * as vscode from "vscode";
 
 import { urlToLink } from "./link";
@@ -18,12 +19,10 @@ export const activate = (context: vscode.ExtensionContext) => {
         const selection = editor.selection;
         const document = editor.document;
         const text = document.getText(selection);
+
+        // if exists selected text
         if (text) {
-          urlToLink(text).then((link) => {
-            editor.edit((editBuilder) => {
-              editBuilder.replace(selection, link);
-            });
-          });
+          urlToLink(text, replaceSelection);
         }
       }
     }
@@ -34,3 +33,16 @@ export const activate = (context: vscode.ExtensionContext) => {
 
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
+
+const replaceSelection = (text: string) => {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    const selection = editor.selection;
+    const selectedText = editor.document.getText(selection);
+    if (selectedText) {
+      editor.edit((editBuilder) => {
+        editBuilder.replace(selection, text);
+      });
+    }
+  }
+};
