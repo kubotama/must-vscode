@@ -50,7 +50,7 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
       expected: "Vuetifyをインストールした環境でJestを実行する設定",
     },
   ])("$expected", ({ url, title, expected }) => {
-    const displayTitle = link.toDisplayTitle(title, url);
+    const displayTitle = link.toDisplayTitle({ title, url });
 
     expect(displayTitle).toEqual(expected);
   });
