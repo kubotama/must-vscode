@@ -1,31 +1,57 @@
-import * as assert from 'assert';
+import * as link from "../../link";
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
-
-import { urlToMarkdownLink } from '../../markdown';
-
-suite('Markdown Link', () => {
-	vscode.window.showInformationMessage('Start all tests.');
-
-	test('Google', (done) => {
-    urlToMarkdownLink('https://www.google.com').then((link) => {
-      assert.equal(link, '[Google](https://www.google.com)');
-    });
-    done();
+describe("Markdown Link", () => {
+  afterEach(() => {
+    jest.resetAllMocks();
   });
-  test('GitHub', (done) => {
-    urlToMarkdownLink('https://www.github.com').then((link) => {
-          assert.equal(link, '[GitHub: Where the world builds software · GitHub](https://www.github.com)');
+
+  test.each([
+    { url: "https://www.google.com", title: "Google", expected: "Google" },
+    {
+      url: "https://www.github.com/",
+      title: "GitHub: Where the world builds software · GitHub",
+      expected: "GitHub: Where the world builds software · GitHub",
+    },
+    {
+      url: "https://www.github.com/must-vscode",
+      title:
+        "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
+      expected:
+        "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
+    },
+  ])("$title", ({ url, title, expected }) => {
+    jest
+      .spyOn(link, "getTitle")
+      .mockImplementation(() => Promise.resolve(title));
+    return link.getTitle(url).then((link) => {
+      expect(link).toEqual(expected);
     });
-    done();
   });
-  test('GitHub repository', (done) => {
-     urlToMarkdownLink('https://github.com/kubotama/must-vscode').then((link) => {
-       assert.equal(link, '[GitHub - kubotama/must-vscode: MarkUp support tool by netlify](https://github.com/kubotama/must-vscode)');
-    });
-    done();
+});
+
+describe("issue #9: Change the title retrieved from the site to a predefined format", () => {
+  test.each([
+    { url: "https://www.google.com", title: "Google", expected: "Google" },
+    {
+      url: "https://www.github.com/",
+      title: "GitHub: Where the world builds software · GitHub",
+      expected: "GitHub: Where the world builds software · GitHub",
+    },
+    {
+      url: "https://www.github.com/must-vscode",
+      title:
+        "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
+      expected:
+        "kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
+    },
+    {
+      url: "https://qiita.com/kubotama/items/c3931fb9145f5021d39a",
+      title: "Vuetifyをインストールした環境でJestを実行する設定 - Qiita",
+      expected: "Vuetifyをインストールした環境でJestを実行する設定",
+    },
+  ])("$expected", ({ url, title, expected }) => {
+    const displayTitle = link.toDisplayTitle({ title, url });
+
+    expect(displayTitle).toEqual(expected);
   });
 });

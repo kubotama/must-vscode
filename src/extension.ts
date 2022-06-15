@@ -1,40 +1,48 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import { text } from "stream/consumers";
+import * as vscode from "vscode";
 
-import { urlToMarkdownLink } from './markdown';
+import { urlToLink } from "./link";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export const activate = (context: vscode.ExtensionContext) => {
+  // The command has been defined in the package.json file
+  // Now provide the implementation of the command with registerCommand
+  // The commandId parameter must match the command field in package.json
+  let disposable = vscode.commands.registerCommand(
+    "must-vscode.urlToLink",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const selection = editor.selection;
+        const document = editor.document;
+        const text = document.getText(selection);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	// console.log('Congratulations, your extension "must-vscode" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('must-vscode.urlToMarkdownLink', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const selection = editor.selection;
-      const document = editor.document;
-      const text = document.getText(selection);
-      if (text) {
-        urlToMarkdownLink(text).then((link) => {
-          editor.edit(editBuilder => {
-            editBuilder.replace(selection, link);
-          });
-        });
+        // if exists selected text
+        if (text) {
+          urlToLink(text, replaceSelection);
+        }
       }
     }
-	});
+  );
 
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 };
 
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
+
+const replaceSelection = (text: string) => {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    const selection = editor.selection;
+    const selectedText = editor.document.getText(selection);
+    if (selectedText) {
+      editor.edit((editBuilder) => {
+        editBuilder.replace(selection, text);
+      });
+    }
+  }
+};
