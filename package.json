@@ -27,7 +27,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "jest": "yarn compile && jest --roots=./out/jest",
+    "jest": "yarn compile && jest --roots=./out/test",
     "test": "jest --roots=./out/test"
   },
   "devDependencies": {
