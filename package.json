@@ -2,7 +2,7 @@
   "name": "must-vscode",
   "displayName": "must-vscode",
   "description": "markup language support tool",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.68.0"
   },
