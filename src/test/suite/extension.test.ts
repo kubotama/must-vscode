@@ -4,28 +4,48 @@
 // as well as import your extension to test it
 // import * as vscode from "vscode";
 
-import { getTitle } from "../../link";
+// import { getTitle } from "../../link";
+import * as link from "../../link";
 
 describe("Markdown Link", () => {
-  // vscode.window.showInformationMessage("Start all tests.");
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   test("Google", () => {
-    return getTitle("https://www.google.com").then((link) => {
+    jest
+      .spyOn(link, "getTitle")
+      .mockImplementation(() => Promise.resolve("Google"));
+    return link.getTitle("https://www.google.com").then((link) => {
       expect(link).toEqual("Google");
     });
   });
 
   test("GitHub", () => {
-    return getTitle("https://www.github.com").then((link) => {
+    jest
+      .spyOn(link, "getTitle")
+      .mockImplementation(() =>
+        Promise.resolve("GitHub: Where the world builds software · GitHub")
+      );
+    return link.getTitle("https://www.github.com").then((link) => {
       expect(link).toEqual("GitHub: Where the world builds software · GitHub");
     });
   });
 
   test("GitHub repository", () => {
-    return getTitle("https://github.com/kubotama/must-vscode").then((link) => {
-      expect(link).toEqual(
-        "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension"
+    jest
+      .spyOn(link, "getTitle")
+      .mockImplementation(() =>
+        Promise.resolve(
+          "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension"
+        )
       );
-    });
+    return link
+      .getTitle("https://github.com/kubotama/must-vscode")
+      .then((link) => {
+        expect(link).toEqual(
+          "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension"
+        );
+      });
   });
 });
