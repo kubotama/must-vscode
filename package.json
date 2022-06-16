@@ -19,7 +19,30 @@
         "command": "must-vscode.urlToLink",
         "title": "must: url to Link"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Must",
+      "properties": {
+        "titlePatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
