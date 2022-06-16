@@ -7,7 +7,7 @@ export const urlToLink = (
   titlePatterns: TitlePattern[],
   replaceSelection: (text: string) => void
 ) => {
-  getTitle(url).then((title) => {
+  return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
     replaceSelection(`[${displayTitle}](${url})`);
   });
