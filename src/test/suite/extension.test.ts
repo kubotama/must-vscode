@@ -29,6 +29,19 @@ describe("Markdown Link", () => {
   });
 });
 
+const titlePatterns = [
+  {
+    url: "https://www.github.com/.*",
+    pattern: "GitHub - (.*)",
+    format: "$1",
+  },
+  {
+    url: "https://qiita.com/.*",
+    pattern: "(.*) - Qiita",
+    format: "$1",
+  },
+];
+
 describe("issue #9: Change the title retrieved from the site to a predefined format", () => {
   test.each([
     { url: "https://www.google.com", title: "Google", expected: "Google" },
@@ -50,7 +63,7 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
       expected: "Vuetifyをインストールした環境でJestを実行する設定",
     },
   ])("$expected", ({ url, title, expected }) => {
-    const displayTitle = link.toDisplayTitle({ title, url });
+    const displayTitle = link.toDisplayTitle({ title, titlePatterns, url });
 
     expect(displayTitle).toEqual(expected);
   });

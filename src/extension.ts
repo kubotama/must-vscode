@@ -3,7 +3,7 @@
 import { text } from "stream/consumers";
 import * as vscode from "vscode";
 
-import { urlToLink } from "./link";
+import { urlToLink, TitlePattern } from "./link";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -19,10 +19,11 @@ export const activate = (context: vscode.ExtensionContext) => {
         const selection = editor.selection;
         const document = editor.document;
         const text = document.getText(selection);
+        const titlePatterns = getTitlePatterns();
 
         // if exists selected text
         if (text) {
-          urlToLink(text, replaceSelection);
+          urlToLink(text, titlePatterns, replaceSelection);
         }
       }
     }
@@ -45,4 +46,19 @@ const replaceSelection = (text: string) => {
       });
     }
   }
+};
+
+export const getTitlePatterns: () => TitlePattern[] = () => {
+  return [
+    {
+      url: "https://www.github.com/.*",
+      pattern: "GitHub - (.*)",
+      format: "$1",
+    },
+    {
+      url: "https://qiita.com/.*",
+      pattern: "(.*) - Qiita",
+      format: "$1",
+    },
+  ];
 };
