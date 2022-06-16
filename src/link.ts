@@ -1,7 +1,6 @@
 import axios from "axios";
 
 import { JSDOM } from "jsdom";
-import { type } from "os";
 
 export const urlToLink = (
   url: string,
