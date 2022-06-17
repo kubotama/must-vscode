@@ -1,8 +1,12 @@
 {
   "name": "must-vscode",
-  "displayName": "must-vscode",
-  "description": "markup language support tool",
+  "displayName": "Markup Language Support Tool",
+  "description": "Make link format from URL",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+git@github.com:kubotama/must-vscode.git"
+  },
   "engines": {
     "vscode": "^1.68.0"
   },
@@ -17,9 +21,34 @@
     "commands": [
       {
         "command": "must-vscode.urlToLink",
-        "title": "must: url to Link"
+        "title": "Format Link from URL"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "id": "must-vscode",
+      "title": "Markup Language Support Tool",
+      "properties": {
+        "must-vscode.titlePatterns": {
+          "description": "The patterns used when formatting the title of a link.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
