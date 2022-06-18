@@ -48,16 +48,11 @@ const replaceSelection = (text: string) => {
 };
 
 export const getTitlePatterns: () => TitlePattern[] = () => {
-  return [
-    {
-      url: "https://www.github.com/.*",
-      pattern: "GitHub - (.*)",
-      format: "$1",
-    },
-    {
-      url: "https://qiita.com/.*",
-      pattern: "(.*) - Qiita",
-      format: "$1",
-    },
-  ];
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
+
+  if (titlePatterns) {
+    return titlePatterns;
+  }
+  return [];
 };

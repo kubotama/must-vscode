@@ -21,7 +21,7 @@
     "commands": [
       {
         "command": "must-vscode.urlToLink",
-        "title": "Format Link from URL"
+        "title": "Must: Format Link from URL"
       }
     ],
     "configuration": {
