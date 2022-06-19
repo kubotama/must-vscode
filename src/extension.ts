@@ -34,14 +34,22 @@ export const activate = (context: vscode.ExtensionContext) => {
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
 
-const replaceSelection = (text: string) => {
+export type LinkSet = {
+  title: string;
+  url: string;
+};
+
+const replaceSelection = (linkSet: LinkSet) => {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
     const selection = editor.selection;
     const selectedText = editor.document.getText(selection);
     if (selectedText) {
+      const title = linkSet.title;
+      const url = linkSet.url;
+      const linkFormat = `[${title}](${url})`;
       editor.edit((editBuilder) => {
-        editBuilder.replace(selection, text);
+        editBuilder.replace(selection, linkFormat);
       });
     }
   }

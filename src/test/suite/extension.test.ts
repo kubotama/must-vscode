@@ -74,26 +74,33 @@ describe("urlToLink", () => {
     {
       url: "https://www.google.com",
       title: "Google",
-      expected: "[Google](https://www.google.com)",
+      expected: { title: "Google", url: "https://www.google.com" },
     },
     {
       url: "https://www.github.com/",
       title: "GitHub: Where the world builds software · GitHub",
-      expected:
-        "[GitHub: Where the world builds software · GitHub](https://www.github.com/)",
+      expected: {
+        title: "GitHub: Where the world builds software · GitHub",
+        url: "https://www.github.com/",
+      },
     },
     {
       url: "https://www.github.com/must-vscode",
       title:
         "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
-      expected:
-        "[kubotama/must-vscode: markup language support tool of Visual Studio Code extension](https://www.github.com/must-vscode)",
+      expected: {
+        title:
+          "kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
+        url: "https://www.github.com/must-vscode",
+      },
     },
     {
       url: "https://qiita.com/kubotama/items/c3931fb9145f5021d39a",
       title: "Vuetifyをインストールした環境でJestを実行する設定 - Qiita",
-      expected:
-        "[Vuetifyをインストールした環境でJestを実行する設定](https://qiita.com/kubotama/items/c3931fb9145f5021d39a)",
+      expected: {
+        title: "Vuetifyをインストールした環境でJestを実行する設定",
+        url: "https://qiita.com/kubotama/items/c3931fb9145f5021d39a",
+      },
     },
   ])("$expected", ({ url, title, expected }) => {
     jest
