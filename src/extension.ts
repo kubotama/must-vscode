@@ -55,7 +55,7 @@ const replaceSelection = (linkSet: LinkSet) => {
   }
 };
 
-export const getTitlePatterns: () => TitlePattern[] = () => {
+const getTitlePatterns: () => TitlePattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
 
