@@ -2,12 +2,12 @@ import axios from "axios";
 
 import { JSDOM } from "jsdom";
 
-import { LinkSet } from "./extension";
+import { LinkPart } from "./extension";
 
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
-  replaceSelection: (linkSet: LinkSet) => void
+  replaceSelection: (linkPart: LinkPart) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });

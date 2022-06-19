@@ -34,27 +34,6 @@ export const activate = (context: vscode.ExtensionContext) => {
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
 
-export type LinkSet = {
-  title: string;
-  url: string;
-};
-
-const replaceSelection = (linkSet: LinkSet) => {
-  const editor = vscode.window.activeTextEditor;
-  if (editor) {
-    const selection = editor.selection;
-    const selectedText = editor.document.getText(selection);
-    if (selectedText) {
-      const linkFormat = getLinkFormat(editor, linkSet);
-      if (linkFormat) {
-        editor.edit((editBuilder) => {
-          editBuilder.replace(selection, linkFormat);
-        });
-      }
-    }
-  }
-};
-
 const getTitlePatterns: () => TitlePattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
@@ -65,10 +44,31 @@ const getTitlePatterns: () => TitlePattern[] = () => {
   return [];
 };
 
+export type LinkPart = {
+  title: string;
+  url: string;
+};
+
+const replaceSelection = (linkPart: LinkPart) => {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    const selection = editor.selection;
+    const selectedText = editor.document.getText(selection);
+    if (selectedText) {
+      const linkText = getLinkFormat(editor, linkPart);
+      if (linkText) {
+        editor.edit((editBuilder) => {
+          editBuilder.replace(selection, linkText);
+        });
+      }
+    }
+  }
+};
+
 const getLinkFormat: (
   editor: vscode.TextEditor,
-  linkSet: LinkSet
-) => string | undefined = (editor, linkSet) => {
+  linkPart: LinkPart
+) => string | undefined = (editor, linkPart) => {
   const languageId = editor.document.languageId;
   if (!languageId) {
     return undefined;
@@ -86,8 +86,8 @@ const getLinkFormat: (
   for (const linkFormat of linkFormats) {
     if (linkFormat.languageId === languageId) {
       return linkFormat.format
-        .replace("${title}", linkSet.title)
-        .replace("${url}", linkSet.url);
+        .replace("${title}", linkPart.title)
+        .replace("${url}", linkPart.url);
     }
   }
 
