@@ -46,6 +46,21 @@
               }
             }
           }
+        },
+        "must-vscode.linkFormat": {
+          "description": "The format of the link.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }
