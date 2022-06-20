@@ -47,7 +47,7 @@
             }
           }
         },
-        "must-vscode.linkFormat": {
+        "must-vscode.linkFormats": {
           "description": "The format of the link.",
           "type": "array",
           "items": {
