@@ -83,14 +83,16 @@ const getLinkFormat: (
     return undefined;
   }
 
-  for (const linkFormat of linkFormats) {
-    if (linkFormat.languageId === languageId) {
-      return linkFormat.format
-        .replace("${title}", linkPart.title)
-        .replace("${url}", linkPart.url);
-    }
+  const linkFormat = linkFormats.find((linkFormat) => {
+    linkFormat.languageId === languageId;
+  });
+
+  if (linkFormat === undefined) {
+    vscode.window.showErrorMessage("No languages for link format found");
+    return undefined;
   }
 
-  vscode.window.showErrorMessage("No languages for link format found");
-  return undefined;
+  return linkFormat.format
+    .replace("${title}", linkPart.title)
+    .replace("${url}", linkPart.url);
 };
