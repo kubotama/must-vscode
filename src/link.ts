@@ -27,8 +27,8 @@ export const getTitle = async (url: string) => {
 
 export type TitlePattern = {
   url: string;
-  titlePattern: string;
-  titleFormat: string;
+  pattern: string;
+  format: string;
 };
 
 export const toDisplayTitle: (titleInfo: {
@@ -39,11 +39,8 @@ export const toDisplayTitle: (titleInfo: {
   for (const pattern of titleInfo.titlePatterns) {
     const reurl = new RegExp(pattern.url);
     if (reurl.test(titleInfo.url)) {
-      const repattern = new RegExp(pattern.titlePattern);
-      const displayTitle = titleInfo.title.replace(
-        repattern,
-        pattern.titleFormat
-      );
+      const repattern = new RegExp(pattern.pattern);
+      const displayTitle = titleInfo.title.replace(repattern, pattern.format);
       return displayTitle;
     }
   }
