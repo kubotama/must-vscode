@@ -84,10 +84,12 @@ const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
     return undefined;
   }
 
-  for (const linkFormat of linkFormats) {
-    if (linkFormat.languageId === languageId) {
-      return linkFormat.format;
-    }
+  const linkFormat = linkFormats.find(
+    (linkFormat) => linkFormat.languageId === languageId
+  );
+
+  if (linkFormat) {
+    return linkFormat.format;
   }
 
   vscode.window.showErrorMessage("No languages for link format found");
