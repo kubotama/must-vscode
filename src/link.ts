@@ -1,17 +1,20 @@
 import axios from "axios";
 
 import { JSDOM } from "jsdom";
+import { format } from "path";
 
 import { LinkPart } from "./extension";
 
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
-  replaceSelection: (linkPart: LinkPart) => void
+  linkFormat: string,
+  replaceSelection: (text: string) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
-    replaceSelection({ title: displayTitle, url });
+    const linkText = formatLinkText(displayTitle, url, linkFormat);
+    replaceSelection(linkText);
   });
 };
 
@@ -24,8 +27,8 @@ export const getTitle = async (url: string) => {
 
 export type TitlePattern = {
   url: string;
-  pattern: string;
-  format: string;
+  titlePattern: string;
+  titleFormat: string;
 };
 
 export const toDisplayTitle: (titleInfo: {
@@ -36,11 +39,25 @@ export const toDisplayTitle: (titleInfo: {
   for (const pattern of titleInfo.titlePatterns) {
     const reurl = new RegExp(pattern.url);
     if (reurl.test(titleInfo.url)) {
-      const repattern = new RegExp(pattern.pattern);
-      const displayTitle = titleInfo.title.replace(repattern, pattern.format);
+      const repattern = new RegExp(pattern.titlePattern);
+      const displayTitle = titleInfo.title.replace(
+        repattern,
+        pattern.titleFormat
+      );
       return displayTitle;
     }
   }
 
   return titleInfo.title;
+};
+
+export const formatLinkText: (
+  displayTitle: string,
+  url: string,
+  format: string
+) => string = (displayTitle: string, url: string, format: string) => {
+  const linkText = format
+    .replace("${title}", displayTitle)
+    .replace("${url}", url);
+  return linkText;
 };
