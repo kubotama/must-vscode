@@ -32,13 +32,13 @@ describe("Markdown Link", () => {
 const titlePatterns = [
   {
     url: "https://www.github.com/.*",
-    pattern: "GitHub - (.*)",
-    format: "$1",
+    titlePattern: "GitHub - (.*)",
+    titleFormat: "$1",
   },
   {
     url: "https://qiita.com/.*",
-    pattern: "(.*) - Qiita",
-    format: "$1",
+    titlePattern: "(.*) - Qiita",
+    titleFormat: "$1",
   },
 ];
 

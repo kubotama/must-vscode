@@ -38,10 +38,10 @@
               "url": {
                 "type": "string"
               },
-              "pattern": {
+              "titlePattern": {
                 "type": "string"
               },
-              "format": {
+              "titleFormat": {
                 "type": "string"
               }
             }
