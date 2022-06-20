@@ -74,43 +74,39 @@ describe("urlToLink", () => {
     {
       url: "https://www.google.com",
       title: "Google",
-      expected: { title: "Google", url: "https://www.google.com" },
+      expected: "[Google](https://www.google.com)",
     },
     {
       url: "https://www.github.com/",
       title: "GitHub: Where the world builds software · GitHub",
-      expected: {
-        title: "GitHub: Where the world builds software · GitHub",
-        url: "https://www.github.com/",
-      },
+      expected:
+        "[GitHub: Where the world builds software · GitHub](https://www.github.com/)",
     },
     {
       url: "https://www.github.com/must-vscode",
       title:
         "GitHub - kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
-      expected: {
-        title:
-          "kubotama/must-vscode: markup language support tool of Visual Studio Code extension",
-        url: "https://www.github.com/must-vscode",
-      },
+      expected:
+        "[kubotama/must-vscode: markup language support tool of Visual Studio Code extension](https://www.github.com/must-vscode)",
     },
     {
       url: "https://qiita.com/kubotama/items/c3931fb9145f5021d39a",
       title: "Vuetifyをインストールした環境でJestを実行する設定 - Qiita",
-      expected: {
-        title: "Vuetifyをインストールした環境でJestを実行する設定",
-        url: "https://qiita.com/kubotama/items/c3931fb9145f5021d39a",
-      },
+      expected:
+        "[Vuetifyをインストールした環境でJestを実行する設定](https://qiita.com/kubotama/items/c3931fb9145f5021d39a)",
     },
   ])("$expected", ({ url, title, expected }) => {
     jest
       .spyOn(link, "getTitle")
       .mockImplementation(() => Promise.resolve(title));
     const mockReplaceSelection = jest.fn();
+    const markdownLinkFormat = "[${title}](${url})";
 
-    link.urlToLink(url, titlePatterns, mockReplaceSelection).then(() => {
-      expect(mockReplaceSelection).toHaveBeenCalledTimes(1);
-      expect(mockReplaceSelection).toHaveBeenCalledWith(expected);
-    });
+    link
+      .urlToLink(url, titlePatterns, markdownLinkFormat, mockReplaceSelection)
+      .then(() => {
+        expect(mockReplaceSelection).toHaveBeenCalledTimes(1);
+        expect(mockReplaceSelection).toHaveBeenCalledWith(expected);
+      });
   });
 });

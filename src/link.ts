@@ -1,17 +1,20 @@
 import axios from "axios";
 
 import { JSDOM } from "jsdom";
+import { format } from "path";
 
 import { LinkPart } from "./extension";
 
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
-  replaceSelection: (linkPart: LinkPart) => void
+  linkFormat: string,
+  replaceSelection: (text: string) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
-    replaceSelection({ title: displayTitle, url });
+    const linkText = formatLinkText(displayTitle, url, linkFormat);
+    replaceSelection(linkText);
   });
 };
 
@@ -43,4 +46,15 @@ export const toDisplayTitle: (titleInfo: {
   }
 
   return titleInfo.title;
+};
+
+export const formatLinkText: (
+  displayTitle: string,
+  url: string,
+  format: string
+) => string = (displayTitle: string, url: string, format: string) => {
+  const linkText = format
+    .replace("${title}", displayTitle)
+    .replace("${url}", url);
+  return linkText;
 };

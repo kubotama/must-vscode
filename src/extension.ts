@@ -22,7 +22,10 @@ export const activate = (context: vscode.ExtensionContext) => {
 
         // if exists selected text
         if (text) {
-          urlToLink(text, titlePatterns, replaceSelection);
+          const linkFormat = getLinkFormat(editor);
+          if (linkFormat) {
+            urlToLink(text, titlePatterns, linkFormat, replaceSelection);
+          }
         }
       }
     }
@@ -49,26 +52,24 @@ export type LinkPart = {
   url: string;
 };
 
-const replaceSelection = (linkPart: LinkPart) => {
+const replaceSelection = (text: string) => {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
     const selection = editor.selection;
     const selectedText = editor.document.getText(selection);
     if (selectedText) {
-      const linkText = getLinkFormat(editor, linkPart);
-      if (linkText) {
+      if (text) {
         editor.edit((editBuilder) => {
-          editBuilder.replace(selection, linkText);
+          editBuilder.replace(selection, text);
         });
       }
     }
   }
 };
 
-const getLinkFormat: (
-  editor: vscode.TextEditor,
-  linkPart: LinkPart
-) => string | undefined = (editor, linkPart) => {
+const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
+  editor
+) => {
   const languageId = editor.document.languageId;
   if (!languageId) {
     return undefined;
@@ -83,16 +84,12 @@ const getLinkFormat: (
     return undefined;
   }
 
-  const linkFormat = linkFormats.find((linkFormat) => {
-    linkFormat.languageId === languageId;
-  });
-
-  if (linkFormat === undefined) {
-    vscode.window.showErrorMessage("No languages for link format found");
-    return undefined;
+  for (const linkFormat of linkFormats) {
+    if (linkFormat.languageId === languageId) {
+      return linkFormat.format;
+    }
   }
 
-  return linkFormat.format
-    .replace("${title}", linkPart.title)
-    .replace("${url}", linkPart.url);
+  vscode.window.showErrorMessage("No languages for link format found");
+  return undefined;
 };
