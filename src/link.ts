@@ -8,12 +8,14 @@ import { LinkPart } from "./extension";
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
+  urlPatterns: UrlPattern[],
   linkFormat: string,
   replaceSelection: (text: string) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
-    const linkText = formatLinkText(displayTitle, url, linkFormat);
+    const displayUrl = toDisplayUrl(url, urlPatterns);
+    const linkText = toLinkText(displayTitle, displayUrl, linkFormat);
     replaceSelection(linkText);
   });
 };
@@ -48,7 +50,7 @@ export const toDisplayTitle: (titleInfo: {
   return titleInfo.title;
 };
 
-export const formatLinkText: (
+export const toLinkText: (
   displayTitle: string,
   url: string,
   format: string
@@ -57,4 +59,26 @@ export const formatLinkText: (
     .replace("${title}", displayTitle)
     .replace("${url}", url);
   return linkText;
+};
+
+export type UrlPattern = {
+  url: string;
+  format: string;
+};
+
+export const toDisplayUrl: (
+  url: string,
+  urlPatterns: UrlPattern[]
+) => string = (url: string, urlPatterns: UrlPattern[]) => {
+  const urlPattern = urlPatterns.find((urlPattern) => {
+    const reUrl = new RegExp(urlPattern.url);
+    return reUrl.test(url);
+  });
+  if (urlPattern) {
+    const formatUrl = urlPattern.format;
+    const reUrl = new RegExp(urlPattern.url);
+    const displayUrl = url.replace(reUrl, formatUrl);
+    return displayUrl;
+  }
+  return url;
 };

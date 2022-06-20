@@ -61,6 +61,21 @@
               }
             }
           }
+        },
+        "must-vscode.urlPatterns": {
+          "description": "The patterns used when formatting the URL of a link.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }
