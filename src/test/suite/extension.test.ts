@@ -45,6 +45,11 @@ const titlePatterns = [
     pattern: "(.*) \\| 東洋経済オンライン \\| 社会をよくする経済ニュース",
     format: "$1",
   },
+  {
+    url: "https://gihyo.jp/.*",
+    pattern: "(.*)｜gihyo.jp … 技術評論社",
+    format: "$1",
+  },
 ];
 
 describe("issue #9: Change the title retrieved from the site to a predefined format", () => {
@@ -72,6 +77,13 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
       title:
         "継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬 | 東洋経済オンライン | 社会をよくする経済ニュース",
       expected: "継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬",
+    },
+    {
+      url: "https://gihyo.jp/admin/clip/01/linux_dt/202206/20",
+      title:
+        "2022年6月20日　ワンライナーのお手本!? SUSEエンジニアが作成したext4のパフォーマンス改善パッチ：Linux Daily Topics｜gihyo.jp … 技術評論社",
+      expected:
+        "2022年6月20日　ワンライナーのお手本!? SUSEエンジニアが作成したext4のパフォーマンス改善パッチ：Linux Daily Topics",
     },
   ])("$expected", ({ url, title, expected }) => {
     const displayTitle = link.toDisplayTitle({ title, titlePatterns, url });
