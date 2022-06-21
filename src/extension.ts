@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-import { urlToLink, TitlePattern } from "./link";
+import { urlToLink, TitlePattern, UrlPattern } from "./link";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -17,15 +17,20 @@ export const activate = (context: vscode.ExtensionContext) => {
       if (editor) {
         const selection = editor.selection;
         const document = editor.document;
-        const text = document.getText(selection);
         const titlePatterns = getTitlePatterns();
+        const urlPatterns = getUrlPatterns();
 
+        const text = document.getText(selection);
+        const linkFormat = getLinkFormat(editor);
         // if exists selected text
-        if (text) {
-          const linkFormat = getLinkFormat(editor);
-          if (linkFormat) {
-            urlToLink(text, titlePatterns, linkFormat, replaceSelection);
-          }
+        if (text && linkFormat) {
+          urlToLink(
+            text,
+            titlePatterns,
+            urlPatterns,
+            linkFormat,
+            replaceSelection
+          );
         }
       }
     }
@@ -43,6 +48,16 @@ const getTitlePatterns: () => TitlePattern[] = () => {
 
   if (titlePatterns) {
     return titlePatterns;
+  }
+  return [];
+};
+
+const getUrlPatterns: () => UrlPattern[] = () => {
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const urlPatterns: UrlPattern[] | undefined = config.get("urlPatterns");
+
+  if (urlPatterns) {
+    return urlPatterns;
   }
   return [];
 };

@@ -32,13 +32,23 @@ describe("Markdown Link", () => {
 const titlePatterns = [
   {
     url: "https://www.github.com/.*",
-    titlePattern: "GitHub - (.*)",
-    titleFormat: "$1",
+    pattern: "GitHub - (.*)",
+    format: "$1",
   },
   {
     url: "https://qiita.com/.*",
-    titlePattern: "(.*) - Qiita",
-    titleFormat: "$1",
+    pattern: "(.*) - Qiita",
+    format: "$1",
+  },
+  {
+    url: "https://toyokeizai.net/articles/.*",
+    pattern: "(.*) \\| 東洋経済オンライン \\| 社会をよくする経済ニュース",
+    format: "$1",
+  },
+  {
+    url: "https://gihyo.jp/.*",
+    pattern: "(.*)｜gihyo.jp … 技術評論社",
+    format: "$1",
   },
 ];
 
@@ -62,12 +72,32 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
       title: "Vuetifyをインストールした環境でJestを実行する設定 - Qiita",
       expected: "Vuetifyをインストールした環境でJestを実行する設定",
     },
+    {
+      url: "https://toyokeizai.net/articles/-/589018?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+      title:
+        "継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬 | 東洋経済オンライン | 社会をよくする経済ニュース",
+      expected: "継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬",
+    },
+    {
+      url: "https://gihyo.jp/admin/clip/01/linux_dt/202206/20",
+      title:
+        "2022年6月20日　ワンライナーのお手本!? SUSEエンジニアが作成したext4のパフォーマンス改善パッチ：Linux Daily Topics｜gihyo.jp … 技術評論社",
+      expected:
+        "2022年6月20日　ワンライナーのお手本!? SUSEエンジニアが作成したext4のパフォーマンス改善パッチ：Linux Daily Topics",
+    },
   ])("$expected", ({ url, title, expected }) => {
     const displayTitle = link.toDisplayTitle({ title, titlePatterns, url });
 
     expect(displayTitle).toEqual(expected);
   });
 });
+
+const urlPatterns = [
+  {
+    url: "(https://toyokeizai.net/articles/.*)\\?.*",
+    format: "$1",
+  },
+];
 
 describe("urlToLink", () => {
   test.each([
@@ -95,6 +125,13 @@ describe("urlToLink", () => {
       expected:
         "[Vuetifyをインストールした環境でJestを実行する設定](https://qiita.com/kubotama/items/c3931fb9145f5021d39a)",
     },
+    {
+      url: "https://toyokeizai.net/articles/-/589018?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+      title:
+        "継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬 | 東洋経済オンライン | 社会をよくする経済ニュース",
+      expected:
+        "[継ぎ足した｢秘伝の醤油｣腐らせた新米職人の決断 | 江戸前の旬](https://toyokeizai.net/articles/-/589018)",
+    },
   ])("$expected", ({ url, title, expected }) => {
     jest
       .spyOn(link, "getTitle")
@@ -103,10 +140,32 @@ describe("urlToLink", () => {
     const markdownLinkFormat = "[${title}](${url})";
 
     link
-      .urlToLink(url, titlePatterns, markdownLinkFormat, mockReplaceSelection)
+      .urlToLink(
+        url,
+        titlePatterns,
+        urlPatterns,
+        markdownLinkFormat,
+        mockReplaceSelection
+      )
       .then(() => {
         expect(mockReplaceSelection).toHaveBeenCalledTimes(1);
         expect(mockReplaceSelection).toHaveBeenCalledWith(expected);
       });
+  });
+});
+describe("toDisplayUrl", () => {
+  test.each([
+    {
+      url: "https://www.google.com",
+      expected: "https://www.google.com",
+    },
+    {
+      url: "https://toyokeizai.net/articles/-/589018?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+      expected: "https://toyokeizai.net/articles/-/589018",
+    },
+  ])("$expected", ({ url, expected }) => {
+    const displayUrl = link.toDisplayUrl(url, urlPatterns);
+
+    expect(displayUrl).toEqual(expected);
   });
 });

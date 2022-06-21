@@ -8,12 +8,14 @@ import { LinkPart } from "./extension";
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
+  urlPatterns: UrlPattern[],
   linkFormat: string,
   replaceSelection: (text: string) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
-    const linkText = formatLinkText(displayTitle, url, linkFormat);
+    const displayUrl = toDisplayUrl(url, urlPatterns);
+    const linkText = toLinkText(displayTitle, displayUrl, linkFormat);
     replaceSelection(linkText);
   });
 };
@@ -27,8 +29,8 @@ export const getTitle = async (url: string) => {
 
 export type TitlePattern = {
   url: string;
-  titlePattern: string;
-  titleFormat: string;
+  pattern: string;
+  format: string;
 };
 
 export const toDisplayTitle: (titleInfo: {
@@ -39,11 +41,8 @@ export const toDisplayTitle: (titleInfo: {
   for (const pattern of titleInfo.titlePatterns) {
     const reurl = new RegExp(pattern.url);
     if (reurl.test(titleInfo.url)) {
-      const repattern = new RegExp(pattern.titlePattern);
-      const displayTitle = titleInfo.title.replace(
-        repattern,
-        pattern.titleFormat
-      );
+      const repattern = new RegExp(pattern.pattern);
+      const displayTitle = titleInfo.title.replace(repattern, pattern.format);
       return displayTitle;
     }
   }
@@ -51,7 +50,7 @@ export const toDisplayTitle: (titleInfo: {
   return titleInfo.title;
 };
 
-export const formatLinkText: (
+export const toLinkText: (
   displayTitle: string,
   url: string,
   format: string
@@ -60,4 +59,26 @@ export const formatLinkText: (
     .replace("${title}", displayTitle)
     .replace("${url}", url);
   return linkText;
+};
+
+export type UrlPattern = {
+  url: string;
+  format: string;
+};
+
+export const toDisplayUrl: (
+  url: string,
+  urlPatterns: UrlPattern[]
+) => string = (url: string, urlPatterns: UrlPattern[]) => {
+  const urlPattern = urlPatterns.find((urlPattern) => {
+    const reUrl = new RegExp(urlPattern.url);
+    return reUrl.test(url);
+  });
+  if (urlPattern) {
+    const formatUrl = urlPattern.format;
+    const reUrl = new RegExp(urlPattern.url);
+    const displayUrl = url.replace(reUrl, formatUrl);
+    return displayUrl;
+  }
+  return url;
 };

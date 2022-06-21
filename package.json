@@ -38,10 +38,10 @@
               "url": {
                 "type": "string"
               },
-              "titlePattern": {
+              "pattern": {
                 "type": "string"
               },
-              "titleFormat": {
+              "format": {
                 "type": "string"
               }
             }
@@ -54,6 +54,21 @@
             "type": "object",
             "properties": {
               "language": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "must-vscode.urlPatterns": {
+          "description": "The patterns used when formatting the URL of a link.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
                 "type": "string"
               },
               "format": {
