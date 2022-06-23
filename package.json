@@ -32,6 +32,18 @@
         "must-vscode.titlePatterns": {
           "description": "The patterns used when formatting the title of a link.",
           "type": "array",
+          "default": [
+            {
+              "url": "https://qiita.com/",
+              "pattern": "(.*) - Qiita",
+              "format": "$1"
+            },
+            {
+              "url": "https://xtech.nikkei.com/.*",
+              "pattern": "(.*) \\| 日経クロステック（xTECH）",
+              "format": "$1"
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {
@@ -50,6 +62,12 @@
         "must-vscode.linkFormats": {
           "description": "The format of the link.",
           "type": "array",
+          "default": [
+            {
+              "languageId": "markdown",
+              "format": "[${title}](${url})"
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {
@@ -65,6 +83,12 @@
         "must-vscode.urlPatterns": {
           "description": "The patterns used when formatting the URL of a link.",
           "type": "array",
+          "default": [
+            {
+              "url": "(https://xtech.nikkei.com/.*)\\?.*",
+              "format": "$1"
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {

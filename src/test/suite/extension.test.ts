@@ -50,6 +50,11 @@ const titlePatterns = [
     pattern: "(.*)｜gihyo.jp … 技術評論社",
     format: "$1",
   },
+  {
+    url: "https://xtech.nikkei.com/.*",
+    pattern: "(.*) \\| 日経クロステック（xTECH）",
+    format: "$1",
+  },
 ];
 
 describe("issue #9: Change the title retrieved from the site to a predefined format", () => {
@@ -85,6 +90,13 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
       expected:
         "2022年6月20日　ワンライナーのお手本!? SUSEエンジニアが作成したext4のパフォーマンス改善パッチ：Linux Daily Topics",
     },
+    {
+      url: "https://xtech.nikkei.com/atcl/nxt/column/18/00849/00081/?n_cid=nbpnxt_mled_itmh",
+      title:
+        "「IE終了でもIEモードで大丈夫」は本当か、ブラウザー移行の先送りで訪れる悲劇 | 日経クロステック（xTECH）",
+      expected:
+        "「IE終了でもIEモードで大丈夫」は本当か、ブラウザー移行の先送りで訪れる悲劇",
+    },
   ])("$expected", ({ url, title, expected }) => {
     const displayTitle = link.toDisplayTitle({ title, titlePatterns, url });
 
@@ -95,6 +107,10 @@ describe("issue #9: Change the title retrieved from the site to a predefined for
 const urlPatterns = [
   {
     url: "(https://toyokeizai.net/articles/.*)\\?.*",
+    format: "$1",
+  },
+  {
+    url: "(https://xtech.nikkei.com/atcl/nxt/column/.*)\\?.*",
     format: "$1",
   },
 ];
@@ -162,6 +178,10 @@ describe("toDisplayUrl", () => {
     {
       url: "https://toyokeizai.net/articles/-/589018?utm_source=rss&utm_medium=http&utm_campaign=link_back",
       expected: "https://toyokeizai.net/articles/-/589018",
+    },
+    {
+      url: "https://xtech.nikkei.com/atcl/nxt/column/18/00849/00081/?n_cid=nbpnxt_mled_itmh",
+      expected: "https://xtech.nikkei.com/atcl/nxt/column/18/00849/00081/",
     },
   ])("$expected", ({ url, expected }) => {
     const displayUrl = link.toDisplayUrl(url, urlPatterns);

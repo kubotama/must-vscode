@@ -1,9 +1,6 @@
 import axios from "axios";
 
 import { JSDOM } from "jsdom";
-import { format } from "path";
-
-import { LinkPart } from "./extension";
 
 export const urlToLink = (
   url: string,
@@ -38,13 +35,13 @@ export const toDisplayTitle: (titleInfo: {
   url: string;
   titlePatterns: TitlePattern[];
 }) => string = (titleInfo) => {
-  for (const pattern of titleInfo.titlePatterns) {
-    const reurl = new RegExp(pattern.url);
-    if (reurl.test(titleInfo.url)) {
-      const repattern = new RegExp(pattern.pattern);
-      const displayTitle = titleInfo.title.replace(repattern, pattern.format);
-      return displayTitle;
-    }
+  const pattern = titleInfo.titlePatterns.find((pattern) => {
+    const reUrl = new RegExp(pattern.url);
+    return reUrl.test(titleInfo.url);
+  });
+  if (pattern) {
+    const rePattern = new RegExp(pattern.pattern);
+    return titleInfo.title.replace(rePattern, pattern.format);
   }
 
   return titleInfo.title;
