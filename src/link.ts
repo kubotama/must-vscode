@@ -1,9 +1,6 @@
 import axios from "axios";
 
 import { JSDOM } from "jsdom";
-import { format } from "path";
-
-import { LinkPart } from "./extension";
 
 export const urlToLink = (
   url: string,
