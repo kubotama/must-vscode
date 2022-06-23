@@ -2,7 +2,7 @@
   "name": "must-vscode",
   "displayName": "Markup Language Support Tool",
   "description": "Make link format from URL",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "repository": {
     "type": "git",
     "url": "git+git@github.com:kubotama/must-vscode.git"
@@ -21,7 +21,7 @@
     "commands": [
       {
         "command": "must-vscode.urlToLink",
-        "title": "Format Link from URL"
+        "title": "Must: Format Link from URL"
       }
     ],
     "configuration": {
@@ -32,6 +32,18 @@
         "must-vscode.titlePatterns": {
           "description": "The patterns used when formatting the title of a link.",
           "type": "array",
+          "default": [
+            {
+              "url": "https://qiita.com/",
+              "pattern": "(.*) - Qiita",
+              "format": "$1"
+            },
+            {
+              "url": "https://xtech.nikkei.com/.*",
+              "pattern": "(.*) \\| 日経クロステック（xTECH）",
+              "format": "$1"
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {
@@ -39,6 +51,48 @@
                 "type": "string"
               },
               "pattern": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "must-vscode.linkFormats": {
+          "description": "The format of the link.",
+          "type": "array",
+          "default": [
+            {
+              "languageId": "markdown",
+              "format": "[${title}](${url})"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "must-vscode.urlPatterns": {
+          "description": "The patterns used when formatting the URL of a link.",
+          "type": "array",
+          "default": [
+            {
+              "url": "(https://xtech.nikkei.com/.*)\\?.*",
+              "format": "$1"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": {
                 "type": "string"
               },
               "format": {

@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-import { urlToLink, TitlePattern } from "./link";
+import { urlToLink, TitlePattern, UrlPattern } from "./link";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -17,12 +17,20 @@ export const activate = (context: vscode.ExtensionContext) => {
       if (editor) {
         const selection = editor.selection;
         const document = editor.document;
-        const text = document.getText(selection);
         const titlePatterns = getTitlePatterns();
+        const urlPatterns = getUrlPatterns();
 
+        const text = document.getText(selection);
+        const linkFormat = getLinkFormat(editor);
         // if exists selected text
-        if (text) {
-          urlToLink(text, titlePatterns, replaceSelection);
+        if (text && linkFormat) {
+          urlToLink(
+            text,
+            titlePatterns,
+            urlPatterns,
+            linkFormat,
+            replaceSelection
+          );
         }
       }
     }
@@ -34,30 +42,71 @@ export const activate = (context: vscode.ExtensionContext) => {
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
 
+const getTitlePatterns: () => TitlePattern[] = () => {
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
+
+  if (titlePatterns) {
+    return titlePatterns;
+  }
+  return [];
+};
+
+const getUrlPatterns: () => UrlPattern[] = () => {
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const urlPatterns: UrlPattern[] | undefined = config.get("urlPatterns");
+
+  if (urlPatterns) {
+    return urlPatterns;
+  }
+  return [];
+};
+
+export type LinkPart = {
+  title: string;
+  url: string;
+};
+
 const replaceSelection = (text: string) => {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
     const selection = editor.selection;
     const selectedText = editor.document.getText(selection);
     if (selectedText) {
-      editor.edit((editBuilder) => {
-        editBuilder.replace(selection, text);
-      });
+      if (text) {
+        editor.edit((editBuilder) => {
+          editBuilder.replace(selection, text);
+        });
+      }
     }
   }
 };
 
-export const getTitlePatterns: () => TitlePattern[] = () => {
-  return [
-    {
-      url: "https://www.github.com/.*",
-      pattern: "GitHub - (.*)",
-      format: "$1",
-    },
-    {
-      url: "https://qiita.com/.*",
-      pattern: "(.*) - Qiita",
-      format: "$1",
-    },
-  ];
+const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
+  editor
+) => {
+  const languageId = editor.document.languageId;
+  if (!languageId) {
+    return undefined;
+  }
+
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const linkFormats: { languageId: string; format: string }[] | undefined =
+    config.get("linkFormats");
+
+  if (linkFormats === undefined) {
+    vscode.window.showErrorMessage("No link format found");
+    return undefined;
+  }
+
+  const linkFormat = linkFormats.find(
+    (linkFormat) => linkFormat.languageId === languageId
+  );
+
+  if (linkFormat) {
+    return linkFormat.format;
+  }
+
+  vscode.window.showErrorMessage("No languages for link format found");
+  return undefined;
 };
