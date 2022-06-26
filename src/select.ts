@@ -3,7 +3,7 @@ export const createUrlSelection = (
   start: number,
   end: number
 ) => {
-  const reStart = new RegExp("(https?:\\/\\/[\\w\\.\\/\\?=&]*)", "g");
+  const reStart = new RegExp("(https?:\\/\\/[\\w\\.\\/\\?=&\\-]*)", "g");
   const matchedList = text.matchAll(reStart);
 
   for (const matched of matchedList) {
@@ -14,7 +14,11 @@ export const createUrlSelection = (
         { start: start, end: end }
       )
     ) {
-      return { start: matched.index, end: matched.index + matched[0].length };
+      return {
+        start: matched.index,
+        end: matched.index + matched[0].length,
+        url: matched[0],
+      };
     }
   }
   return undefined;
