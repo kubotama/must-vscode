@@ -10,7 +10,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
+  const linkDisposable = vscode.commands.registerCommand(
     "must-vscode.urlToLink",
     () => {
       const editor = vscode.window.activeTextEditor;
@@ -36,7 +36,25 @@ export const activate = (context: vscode.ExtensionContext) => {
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(linkDisposable);
+
+  const selectDisposable = vscode.commands.registerCommand(
+    "must-vscode.selectUrl",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const selected = editor.document.getWordRangeAtPosition(
+          editor.selection.active,
+          new RegExp("https?:\\/\\/[\\w\\/:%#\\$&\\?~\\.=\\+\\-]+", "g")
+        );
+        if (selected) {
+          editor.selection = new vscode.Selection(selected.start, selected.end);
+        }
+      }
+    }
+  );
+
+  context.subscriptions.push(selectDisposable);
 };
 
 // this method is called when your extension is deactivated

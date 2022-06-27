@@ -1,4 +1,4 @@
-import * as link from "../../link";
+import * as link from "../link";
 
 describe("Markdown Link", () => {
   afterEach(() => {
