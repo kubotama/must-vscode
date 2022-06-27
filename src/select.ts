@@ -1,8 +1,4 @@
-export const createUrlSelection = (
-  text: string,
-  start: number,
-  end: number
-) => {
+export const toUrlRange = (text: string, start: number, end: number) => {
   const reStart = new RegExp("(https?:\\/\\/[\\w\\.\\/\\?=&\\-]*)", "g");
   const matchedList = text.matchAll(reStart);
 

@@ -1,4 +1,4 @@
-import { createUrlSelection } from "../select";
+import { toUrlRange } from "../select";
 
 const text1 = `
 具体的な例で説明します。
@@ -129,7 +129,7 @@ describe("create select", () => {
       },
     },
   ])("on url: $start - $end $text", ({ text, start, end, expected }) => {
-    const selected = createUrlSelection(text, start, end);
+    const selected = toUrlRange(text, start, end);
     expect(selected).toEqual(expected);
   });
 });
