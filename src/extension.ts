@@ -3,7 +3,6 @@
 import * as vscode from "vscode";
 
 import { urlToLink, TitlePattern, UrlPattern } from "./link";
-// import { toUrlRange } from "./select";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
