@@ -43,8 +43,6 @@ export const activate = (context: vscode.ExtensionContext) => {
     () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
-        // const selection = editor.selection;
-        // const document = editor.document;
         const selected = editor.document.getWordRangeAtPosition(
           editor.selection.active,
           new RegExp("https?:\\/\\/[\\w\\/:%#\\$&\\?~\\.=\\+\\-]+", "g")
