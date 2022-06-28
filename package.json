@@ -110,6 +110,11 @@
               }
             }
           }
+        },
+        "must-vscode.urlRegex": {
+          "description": "The regular expression of URL.",
+          "type": "string",
+          "default": "https?:\\/\\/[\\w\\/:%#\\$&\\?~\\.=\\+\\-]+"
         }
       }
     }

@@ -42,10 +42,11 @@ export const activate = (context: vscode.ExtensionContext) => {
     "must-vscode.selectUrl",
     () => {
       const editor = vscode.window.activeTextEditor;
-      if (editor) {
+      const urlRegex = getUrlRegex();
+      if (editor && urlRegex) {
         const selected = editor.document.getWordRangeAtPosition(
           editor.selection.active,
-          new RegExp("https?:\\/\\/[\\w\\/:%#\\$&\\?~\\.=\\+\\-]+", "g")
+          new RegExp(urlRegex)
         );
         if (selected) {
           editor.selection = new vscode.Selection(selected.start, selected.end);
@@ -127,4 +128,10 @@ const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
 
   vscode.window.showErrorMessage("No languages for link format found");
   return undefined;
+};
+
+const getUrlRegex: () => string | undefined = () => {
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const urlRegex: string | undefined = config.get("urlRegex");
+  return urlRegex;
 };
