@@ -29,6 +29,18 @@
         "title": "Must: Select URL"
       }
     ],
+    "keybindings": [
+      {
+        "command": "must-vscode.selectUrl",
+        "key": "shift+alt+m shift+alt+u",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "must-vscode.urlToLink",
+        "key": "shift+alt+m shift+alt+l",
+        "when": "editorTextFocus"
+      }
+    ],
     "configuration": {
       "type": "object",
       "id": "must-vscode",
