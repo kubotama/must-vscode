@@ -2,7 +2,7 @@
   "name": "must-vscode",
   "displayName": "Markup Language Support Tool",
   "description": "Make link format from URL",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "repository": {
     "type": "git",
     "url": "git+git@github.com:kubotama/must-vscode.git"
