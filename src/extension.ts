@@ -30,7 +30,7 @@ export const activate = (context: vscode.ExtensionContext) => {
               replaceSelection(linkText);
             })
             .catch((error) => {
-              vscode.window.showErrorMessage("Invalid URL.");
+              vscode.window.showErrorMessage(`Invalid URL.: ${error.message}`);
             });
         }
       }
