@@ -25,11 +25,13 @@ export const activate = (context: vscode.ExtensionContext) => {
         const linkFormat = getLinkFormat(editor);
         // if exists selected text
         if (text && linkFormat) {
-          urlToLink(text, titlePatterns, urlPatterns, linkFormat).then(
-            (linkText) => {
+          urlToLink(text, titlePatterns, urlPatterns, linkFormat)
+            .then((linkText) => {
               replaceSelection(linkText);
-            }
-          );
+            })
+            .catch((error) => {
+              vscode.window.showErrorMessage("Invalid URL.");
+            });
         }
       }
     }

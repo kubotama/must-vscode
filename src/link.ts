@@ -9,12 +9,16 @@ export const urlToLink = (
   linkFormat: string
   // replaceSelection: (text: string) => void
 ) => {
-  return getTitle(url).then((title) => {
-    const displayTitle = toDisplayTitle({ title, url, titlePatterns });
-    const displayUrl = toDisplayUrl(url, urlPatterns);
-    const linkText = toLinkText(displayTitle, displayUrl, linkFormat);
-    return linkText;
-  });
+  return getTitle(url)
+    .then((title) => {
+      const displayTitle = toDisplayTitle({ title, url, titlePatterns });
+      const displayUrl = toDisplayUrl(url, urlPatterns);
+      const linkText = toLinkText(displayTitle, displayUrl, linkFormat);
+      return linkText;
+    })
+    .catch((error) => {
+      throw error;
+    });
 };
 
 export const getTitle = async (url: string) => {
