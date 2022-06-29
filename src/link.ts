@@ -6,14 +6,14 @@ export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
   urlPatterns: UrlPattern[],
-  linkFormat: string,
-  replaceSelection: (text: string) => void
+  linkFormat: string
+  // replaceSelection: (text: string) => void
 ) => {
   return getTitle(url).then((title) => {
     const displayTitle = toDisplayTitle({ title, url, titlePatterns });
     const displayUrl = toDisplayUrl(url, urlPatterns);
     const linkText = toLinkText(displayTitle, displayUrl, linkFormat);
-    replaceSelection(linkText);
+    return linkText;
   });
 };
 

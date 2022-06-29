@@ -152,23 +152,16 @@ describe("urlToLink", () => {
     jest
       .spyOn(link, "getTitle")
       .mockImplementation(() => Promise.resolve(title));
-    const mockReplaceSelection = jest.fn();
     const markdownLinkFormat = "[${title}](${url})";
 
     link
-      .urlToLink(
-        url,
-        titlePatterns,
-        urlPatterns,
-        markdownLinkFormat,
-        mockReplaceSelection
-      )
-      .then(() => {
-        expect(mockReplaceSelection).toHaveBeenCalledTimes(1);
-        expect(mockReplaceSelection).toHaveBeenCalledWith(expected);
+      .urlToLink(url, titlePatterns, urlPatterns, markdownLinkFormat)
+      .then((link) => {
+        expect(link).toEqual(expected);
       });
   });
 });
+
 describe("toDisplayUrl", () => {
   test.each([
     {
