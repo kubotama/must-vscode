@@ -154,6 +154,7 @@
     "glob": "^8.0.3",
     "jest": "^28.1.1",
     "parse5": "5",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "dependencies": {
