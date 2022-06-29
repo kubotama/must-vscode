@@ -51,6 +51,8 @@ export const activate = (context: vscode.ExtensionContext) => {
         );
         if (selected) {
           editor.selection = new vscode.Selection(selected.start, selected.end);
+        } else {
+          vscode.window.showErrorMessage("Can't select URL.");
         }
       }
     }
