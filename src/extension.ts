@@ -30,7 +30,7 @@ export const activate = (context: vscode.ExtensionContext) => {
               replaceSelection(linkText);
             })
             .catch((error) => {
-              vscode.window.showErrorMessage("Invalid URL.");
+              vscode.window.showErrorMessage(`Invalid URL.: ${error.message}`);
             });
         }
       }
@@ -68,20 +68,14 @@ const getTitlePatterns: () => TitlePattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
 
-  if (titlePatterns) {
-    return titlePatterns;
-  }
-  return [];
+  return titlePatterns ? titlePatterns : [];
 };
 
 const getUrlPatterns: () => UrlPattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const urlPatterns: UrlPattern[] | undefined = config.get("urlPatterns");
 
-  if (urlPatterns) {
-    return urlPatterns;
-  }
-  return [];
+  return urlPatterns ? urlPatterns : [];
 };
 
 export type LinkPart = {
