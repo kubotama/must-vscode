@@ -7,7 +7,6 @@ export const urlToLink = (
   titlePatterns: TitlePattern[],
   urlPatterns: UrlPattern[],
   linkFormat: string
-  // replaceSelection: (text: string) => void
 ) => {
   return getTitle(url)
     .then((title) => {
