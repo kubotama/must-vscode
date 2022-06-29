@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { link } from "fs";
 import * as vscode from "vscode";
 
 import { urlToLink, TitlePattern, UrlPattern } from "./link";
@@ -24,13 +25,13 @@ export const activate = (context: vscode.ExtensionContext) => {
         const linkFormat = getLinkFormat(editor);
         // if exists selected text
         if (text && linkFormat) {
-          urlToLink(
-            text,
-            titlePatterns,
-            urlPatterns,
-            linkFormat,
-            replaceSelection
-          );
+          urlToLink(text, titlePatterns, urlPatterns, linkFormat)
+            .then((linkText) => {
+              replaceSelection(linkText);
+            })
+            .catch((error) => {
+              vscode.window.showErrorMessage("Invalid URL.");
+            });
         }
       }
     }
@@ -50,6 +51,8 @@ export const activate = (context: vscode.ExtensionContext) => {
         );
         if (selected) {
           editor.selection = new vscode.Selection(selected.start, selected.end);
+        } else {
+          vscode.window.showErrorMessage("Can't select URL.");
         }
       }
     }
