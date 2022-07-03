@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { link } from "fs";
 import * as vscode from "vscode";
 
 import { urlToLink, TitlePattern, UrlPattern } from "./link";
@@ -10,7 +11,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
+  const linkDisposable = vscode.commands.registerCommand(
     "must-vscode.urlToLink",
     () => {
       const editor = vscode.window.activeTextEditor;
@@ -24,19 +25,40 @@ export const activate = (context: vscode.ExtensionContext) => {
         const linkFormat = getLinkFormat(editor);
         // if exists selected text
         if (text && linkFormat) {
-          urlToLink(
-            text,
-            titlePatterns,
-            urlPatterns,
-            linkFormat,
-            replaceSelection
-          );
+          urlToLink(text, titlePatterns, urlPatterns, linkFormat)
+            .then((linkText) => {
+              replaceSelection(linkText);
+            })
+            .catch((error) => {
+              vscode.window.showErrorMessage(`Invalid URL.: ${error.message}`);
+            });
         }
       }
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(linkDisposable);
+
+  const selectDisposable = vscode.commands.registerCommand(
+    "must-vscode.selectUrl",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      const urlRegex = getUrlRegex();
+      if (editor && urlRegex) {
+        const selected = editor.document.getWordRangeAtPosition(
+          editor.selection.active,
+          new RegExp(urlRegex)
+        );
+        if (selected) {
+          editor.selection = new vscode.Selection(selected.start, selected.end);
+        } else {
+          vscode.window.showErrorMessage("Can't select URL.");
+        }
+      }
+    }
+  );
+
+  context.subscriptions.push(selectDisposable);
 };
 
 // this method is called when your extension is deactivated
@@ -46,20 +68,14 @@ const getTitlePatterns: () => TitlePattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
 
-  if (titlePatterns) {
-    return titlePatterns;
-  }
-  return [];
+  return titlePatterns ? titlePatterns : [];
 };
 
 const getUrlPatterns: () => UrlPattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const urlPatterns: UrlPattern[] | undefined = config.get("urlPatterns");
 
-  if (urlPatterns) {
-    return urlPatterns;
-  }
-  return [];
+  return urlPatterns ? urlPatterns : [];
 };
 
 export type LinkPart = {
@@ -109,4 +125,10 @@ const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
 
   vscode.window.showErrorMessage("No languages for link format found");
   return undefined;
+};
+
+const getUrlRegex: () => string | undefined = () => {
+  const config = vscode.workspace.getConfiguration("must-vscode");
+  const urlRegex: string | undefined = config.get("urlRegex");
+  return urlRegex;
 };

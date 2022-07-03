@@ -107,3 +107,9 @@ out/
 .vscode-test/
 
 *.vsix
+
+# for LaTeX
+*.aux
+*.dvi
+*.out
+*.pdf

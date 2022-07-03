@@ -2,7 +2,7 @@
   "name": "must-vscode",
   "displayName": "Markup Language Support Tool",
   "description": "Make link format from URL",
-  "version": "0.6.0",
+  "version": "0.8.2",
   "repository": {
     "type": "git",
     "url": "git+git@github.com:kubotama/must-vscode.git"
@@ -14,7 +14,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:must-vscode.urlToLink"
+    "onCommand:must-vscode.urlToLink",
+    "onCommand:must-vscode.selectUrl"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -22,6 +23,22 @@
       {
         "command": "must-vscode.urlToLink",
         "title": "Must: Format Link from URL"
+      },
+      {
+        "command": "must-vscode.selectUrl",
+        "title": "Must: Select URL"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "must-vscode.selectUrl",
+        "key": "shift+alt+m shift+alt+u",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "must-vscode.urlToLink",
+        "key": "shift+alt+m shift+alt+l",
+        "when": "editorTextFocus"
       }
     ],
     "configuration": {
@@ -41,6 +58,11 @@
             {
               "url": "https://xtech.nikkei.com/.*",
               "pattern": "(.*) \\| 日経クロステック（xTECH）",
+              "format": "$1"
+            },
+            {
+              "url": "https://github.com/.*",
+              "pattern": "GitHub - (.*)",
               "format": "$1"
             }
           ],
@@ -100,6 +122,11 @@
               }
             }
           }
+        },
+        "must-vscode.urlRegex": {
+          "description": "The regular expression of URL.",
+          "type": "string",
+          "default": "https?:\\/\\/[\\w\\/:%#\\$&\\?~\\.=\\+\\-]+"
         }
       }
     }
@@ -127,6 +154,7 @@
     "glob": "^8.0.3",
     "jest": "^28.1.1",
     "parse5": "5",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "dependencies": {
