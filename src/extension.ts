@@ -64,6 +64,10 @@ export const activate = (context: vscode.ExtensionContext) => {
 // this method is called when your extension is deactivated
 export const deactivate = () => {};
 
+/**
+ * load title pattern from settings.json
+ * @returns title patterns loaded from settings.json
+ */
 const getTitlePatterns: () => TitlePattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const titlePatterns: TitlePattern[] | undefined = config.get("titlePatterns");
@@ -71,6 +75,10 @@ const getTitlePatterns: () => TitlePattern[] = () => {
   return titlePatterns ? titlePatterns : [];
 };
 
+/**
+ * load url patterns from settings.json
+ * @returns url patterns loaded from settings.json
+ */
 const getUrlPatterns: () => UrlPattern[] = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const urlPatterns: UrlPattern[] | undefined = config.get("urlPatterns");
@@ -83,6 +91,10 @@ export type LinkPart = {
   url: string;
 };
 
+/**
+ * replace selected text with text given as argument
+ * @param {string} text - text to replace selected text
+ */
 const replaceSelection = (text: string) => {
   const editor = vscode.window.activeTextEditor;
   if (editor) {
@@ -98,6 +110,13 @@ const replaceSelection = (text: string) => {
   }
 };
 
+/**
+ * load link format from settings.json
+ * link format is stored for each language
+ * language id get from active editor
+ * @param {vscode.TextEditor} editor - active editor
+ * @returns {string} link format
+ */
 const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
   editor
 ) => {
@@ -127,6 +146,10 @@ const getLinkFormat: (editor: vscode.TextEditor) => string | undefined = (
   return undefined;
 };
 
+/**
+ * load regular expression for url from settings.json
+ * @returns url regular expression
+ */
 const getUrlRegex: () => string | undefined = () => {
   const config = vscode.workspace.getConfiguration("must-vscode");
   const urlRegex: string | undefined = config.get("urlRegex");

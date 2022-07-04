@@ -2,6 +2,14 @@ import axios from "axios";
 
 import { JSDOM } from "jsdom";
 
+/**
+ * return created link text from link
+ * @param {string} url - url to create link
+ * @param {TitlePattern[]} titlePatterns - title formats for each url pattern
+ * @param {UrlPattern[]} urlPatterns - url formats for each url patterns
+ * @param {string} linkFormat - link format for each language
+ * @returns {Promise<string>} created link text
+ */
 export const urlToLink = (
   url: string,
   titlePatterns: TitlePattern[],
@@ -20,6 +28,11 @@ export const urlToLink = (
     });
 };
 
+/**
+ * return title of url
+ * @param {string} url - url to get the title
+ * @returns {Promise<string>} title text
+ */
 export const getTitle = async (url: string) => {
   const response = await axios.get(url);
   const dom = new JSDOM(response.data);
@@ -33,6 +46,11 @@ export type TitlePattern = {
   format: string;
 };
 
+/**
+ * convert title based on title patterns
+ * @param titleInfo
+ * @returns title converted based on title patterns
+ */
 export const toDisplayTitle: (titleInfo: {
   title: string;
   url: string;
@@ -50,6 +68,13 @@ export const toDisplayTitle: (titleInfo: {
   return titleInfo.title;
 };
 
+/**
+ * create link text based on title and url based on format
+ * @param {string} displayTitle - title text converted by title patterns
+ * @param {string} url - url to create a link
+ * @param {string} format - format to create a link
+ * @returns {string} created link text
+ */
 export const toLinkText: (
   displayTitle: string,
   url: string,
@@ -66,6 +91,12 @@ export type UrlPattern = {
   format: string;
 };
 
+/**
+ * convert url based on url patterns
+ * @param {string} url -
+ * @param urlPatterns
+ * @returns {string} url converted based on url patterns
+ */
 export const toDisplayUrl: (
   url: string,
   urlPatterns: UrlPattern[]
